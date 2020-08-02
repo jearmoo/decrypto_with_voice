@@ -72,7 +72,7 @@ function updateUserList(socketIds) {
     });
 }
 
-const socket = io.connect("https://warm-cliffs-51099.herokuapp.com");
+const socket = io.connect();
 
 
 socket.on("update-user-list", ({ users }) => {
