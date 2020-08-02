@@ -1,26 +1,22 @@
 import express, { Application } from "express";
-import socketIO, { Server as SocketIOServer } from "socket.io";
+import socketIO, { Server as SocketIOServer, Socket } from "socket.io";
 import { createServer, Server as HTTPServer } from "http";
 import path from "path";
 
 export class Server {
-    private app = express();
-    private httpServer = createServer(this.app);
-    private io = socketIO(this.httpServer);
+    private app: Application = express();
+    private httpServer: HTTPServer = createServer(this.app);
+    private io: SocketIOServer = socketIO(this.httpServer);
     private activeSockets: string[] = [];
 
-    private readonly DEFAULT_PORT = 5000;
+    private readonly PORT: number = +(process.env.PORT || 5000);
 
     constructor() {
-        // this.handleRoutes();
         this.configureApp();
         this.handleSocketConnection();
     }
 
     private handleSocketConnection(): void {
-        // this.io.on("connection", socket => {
-        //     console.log("Socket connected.");
-        // });
         this.io.on("connection", socket => {
             const existingSocket = this.activeSockets.find(
                 existingSocket => existingSocket === socket.id
@@ -63,8 +59,8 @@ export class Server {
     }
 
     public listen(callback: (port: number) => void): void {
-        this.httpServer.listen(this.DEFAULT_PORT, () =>
-            callback(this.DEFAULT_PORT)
+        this.httpServer.listen(this.PORT, () =>
+            callback(this.PORT)
         );
     }
 
